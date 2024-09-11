@@ -28,8 +28,6 @@ Collections.sort(words, (s1, s2) -> Integer.compare(s1.length(), s2.length()));
 
 ## Metot referanslarını lambdalara tercih etmek
 
--- https://www.seckintozlu.com/1928-effective-java-madde-43-metot-referanslarini-lambdalara-tercih-edin.html
-
 - Lambda fonksiyonlarının isimsiz sınıflara göre avantajı daha kıs ave öz olmalarıdır. Java bizlere fonksiyon nesneleri tanımlamak için kullanılabilecek lambdadan daha kısa birr yol sunmaktadır: metot referansları. Elimizde belli anahtarları INteger değerlerine eşleştiren bir map olsun bu Integer değerler anahtarın veri yapısına kaç kere eklendiğini tutmaktadır. Yani ekleme işlemi yapılırken veri yapısına daha önceden hiç eklenmemiş bir anahtar için değer 1 olurken, daha önce eklenmiş anahtarlar için var olan değer artırılmaktadır.
 
 ```java
