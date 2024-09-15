@@ -10,3 +10,4 @@
 - Inheritance : [Inheritance Notes](src/main/resources/inheritance.md)
 - Lambda Functions and Streams : [Lambda Functions and Streams Notes](src/main/resources/lambdafunc_and_streams.md)
 - Methods: [Inheritance Notes](src/main/resources/methods.md)
+- Exceptions [Exceptions Notes](src/main/resources/exceptions.md)

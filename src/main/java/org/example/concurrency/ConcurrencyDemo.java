@@ -86,7 +86,6 @@ class WaitingCase {
     synchronized void businessProcessing() {
         try {
             System.out.println("Thread[" + Thread.currentThread().getName() + "] expects to process business, but the computer is broken");
-
             // release the monitor - lock
             wait();
             // business processing
