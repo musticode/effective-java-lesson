@@ -11,3 +11,5 @@
 - Lambda Functions and Streams : [Lambda Functions and Streams Notes](src/main/resources/lambdafunc_and_streams.md)
 - Methods: [Inheritance Notes](src/main/resources/methods.md)
 - Exceptions [Exceptions Notes](src/main/resources/exceptions.md)
+- Concurrency [Concurrency Notes](src/main/resources/concurrency.md)
+- Serialization [Serialization Notes](src/main/resources/serialization.md)

@@ -17,4 +17,27 @@
 ## Consider Using a Custom Serialized Form
 
 - Serileştirilmiş verileriniz için hangi formu alırsanız alın, geçici olarak işaretlenmemiş bir nesnenin her alanı defaultWriteObject yöntemi çağrıldığında serileştirilecektir. Bu, geçici olarak işaretlenebilecek her alanın serileştirilmesi gerektiği anlamına gelir. Buna türetilmiş alanlar, oluşturulmuş alanlar, önbellek değeri alanları veya o tek çalıştırmaya özgü bir şeye işaret eden alanlar (örneğin yerel bir dosya tanıtıcısı) dahildir. Bir alan geçici olmayan olarak işaretlenmeden önce, bunun sınıfın mantıksal modelinin bir parçası olduğuna kendinizi ikna edebilmelisiniz. Sınıf serileştirme yoluyla oluşturulduğunda geçici olarak işaretlenen alanların varsayılan değerlerine başlatılacağını unutmayın
-- https://blog.scaledcode.com/blog/effective-java/consider_custom_serialized_form/
+- Özetle, Java'nın yerleşik serileştirmesini kullanırken, bir sınıfın varsayılan serileştirilmiş biçiminin uygun olup olmadığını göz önünde bulundurun. Mantıksal ve fiziksel gösterimlerinin aynı olup olmadığını belirleyerek uygun olup olmadığını belirleyebilirsiniz. Sınıfınızın serileştirilmiş biçimleri, sınıfınızın genel API'sinin yöntemleri kadar bir parçasıdır ve bu nedenle aynı derecede dikkate alınmalı ve planlanmalıdır.
+
+
+## Write readObject methods defensively
+
+- Özetlemek gerekirse, bir readObject yöntemi yazdığınız her zaman, hangi bayt akışı verildiğinden bağımsız olarak geçerli bir örnek üretmesi gereken genel bir oluşturucu yazdığınızı düşünün. Bayt akışının gerçek bir serileştirilmiş örneği temsil ettiğini varsaymayın. Bu maddedeki örnekler varsayılan serileştirilmiş formu kullanan bir sınıfla ilgili olsa da, ortaya çıkan sorunların tümü özel serileştirilmiş formlara sahip sınıflar için de geçerlidir. Özet biçiminde, bir readObject yöntemi yazma yönergeleri şunlardır:
+  
+  - Gizli kalması gereken nesne referans alanlarına sahip sınıflar için, bu tür bir alandaki her nesneyi savunmacı bir şekilde kopyalayın. Değiştirilemez sınıfların değiştirilebilir bileşenleri bu kategoriye girer.
+  - Kontroller, savunma amaçlı kopyalamanın ardından yapılmalıdır.
+  - Obje deserializasyondan sonra valide edilmelidir.
+  - Override edilebilen methodları class'ın içinden direkt olarak ya da farklı şekilde çağırmayın
+
+
+## For instance control, prefer enum types to readResolve
+
+- Özetlemek gerekirse, mümkün olan her yerde örnek kontrol değişmezlerini zorlamak için enum türlerini kullanın. Bu mümkün değilse ve bir sınıfın hem serileştirilebilir hem de örnek kontrollü olması gerekiyorsa, bir readResolve yöntemi sağlamalı ve sınıfın tüm örnek alanlarının ilkel veya geçici olduğundan emin olmalısınız.
+
+
+## Consider serialization proxies instead of serialized instances
+
+- 85 ve 86. maddelerde belirtildiği ve bu bölüm boyunca tartışıldığı gibi, Serializable'ı uygulama kararı, sıradan oluşturucular yerine dil dışı bir mekanizma kullanılarak örneklerin oluşturulmasına izin verdiği için hata ve güvenlik sorunları olasılığını artırır. Ancak, bu riskleri büyük ölçüde azaltan bir teknik vardır. Bu teknik, serileştirme proxy deseni olarak bilinir.
+- Serileştirme proxy deseni oldukça basittir. İlk olarak, çevreleyen sınıfın bir örneğinin mantıksal durumunu özlü bir şekilde temsil eden özel bir statik iç içe sınıf tasarlayın. Bu iç içe sınıf, çevreleyen sınıfın serileştirme proxy'si olarak bilinir. Parametre türü çevreleyen sınıf olan tek bir oluşturucuya sahip olmalıdır. Bu oluşturucu yalnızca verileri argümanından kopyalar: herhangi bir tutarlılık denetimi veya savunma kopyalaması yapması gerekmez. Tasarım gereği, serileştirme proxy'sinin varsayılan serileştirilmiş biçimi, çevreleyen sınıfın mükemmel serileştirilmiş biçimidir. Serializable'ı uygulamak için hem çevreleyen sınıf hem de serileştirme proxy'si beyan edilmelidir.
+- Serileştirme proxy kalıbının iki sınırlaması vardır. Kullanıcıları tarafından genişletilebilen sınıflarla uyumlu değildir (Öğe 19). Ayrıca, nesne grafikleri dairesellikler içeren bazı sınıflarla uyumlu değildir: Böyle bir nesne üzerinde bir yöntemi, serileştirme proxy'sinin readResolve yöntemi içinden çağırmaya çalışırsanız, henüz nesneye sahip olmadığınız, yalnızca serileştirme proxy'sine sahip olduğunuz için bir ClassCastException alırsınız.
+- Özetle, istemcileri tarafından genişletilemeyen bir sınıf üzerinde readObject veya writeObject yöntemi yazmak zorunda kaldığınızda serileştirme proxy desenini göz önünde bulundurun. Bu desen, önemsiz olmayan değişmezlere sahip nesneleri sağlam bir şekilde serileştirmenin belki de en kolay yoludur.
