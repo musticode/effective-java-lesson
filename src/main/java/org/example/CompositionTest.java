@@ -24,12 +24,12 @@ public class CompositionTest {
  * Sonuç olarak ortaya çıkan sınıf sapasağlam ve içerdiği sınıfın gerçekleştirim detaylarından tamamen bağımsız olacaktır.
  * Referans olarak eklenen sınıfa yeni metotlar eklense bile sizi etkilemeyecektir.
  * */
-class ForwardingSet<E> implements Set<E> {
+class ForwardingSet1<E> implements Set<E> {
 
 
 
     private final Set<E> s;
-    public ForwardingSet(Set<E> s) {
+    public ForwardingSet1(Set<E> s) {
         this.s = s;
     }
 
